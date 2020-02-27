@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  labels:
+    app: pgbouncer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgbouncer
+  template:
+    metadata:
+      labels:
+        app: pgbouncer
+    spec:
+      containers:
+      - name: pgbouncer
+        image: edoburu/pgbouncer
+        ports:
+        - containerPort: 8082
+        volumeMounts:
+          - name: pgbouncer
+            mountPath: /etc/pgbouncer
+            readOnly: true        
+      volumes:
+      - name: pgbouncer
+        configMap:
+            name: pgbouncer-configmap

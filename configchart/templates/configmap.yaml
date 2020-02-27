@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: pgbouncer-configmap
+data:
+    pgbouncer.ini: |        
+        [databases]
+        * = host=10.106.224.80 port=5432
+        [pgbouncer]
+        listen_addr = *
+        listen_port = 6432
+        ; total number of clients that can connect
+        max_client_conn = 1000
+        
+        ; default pool size.  20 is good number when transaction pooling
+        ; is in use, in session pooling it needs to be the number of
+        ; max clients you want to handle at any moment
+        default_pool_size = 20
+        
+        ;; Minimum number of server connections to keep in pool.
+        ;min_pool_size = 0
+        auth_type = md5
+        auth_file = /etc/pgbouncer/userlist.txt
+        admin_users = postgres
+        pool_mode = session
+        server_reset_query = DISCARD ALL
+    userlist.txt: |
+        "postgres" "md5284377132eceabdc22132b9f4bd5133a"
